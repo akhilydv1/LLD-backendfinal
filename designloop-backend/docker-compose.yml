@@ -1,0 +1,38 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    command: ["mongod", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - designloop-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://localhost:27017/admin", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/designloop
+      DEMO_LEARNER_ID: ${DEMO_LEARNER_ID:-d847c7fe-2d42-49d4-8e4d-dde0acbbfd6a}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.8-flash}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:5174}
+      UPLOADS_DIR: /app/data/uploads
+      DESIGNLOOP_MAX_FILE_SIZE_BYTES: ${DESIGNLOOP_MAX_FILE_SIZE_BYTES:-20971520}
+      MAX_ATTACHMENTS_PER_ATTEMPT: ${MAX_ATTACHMENTS_PER_ATTEMPT:-8}
+      MAX_EVALUATION_RUNS: ${MAX_EVALUATION_RUNS:-3}
+    volumes:
+      - ./data/uploads:/app/data/uploads
+
+volumes:
+  designloop-mongo-data:

@@ -1,0 +1,40 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+spring:
+  application:
+    name: designloop-backend
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/designloop}
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:20MB}
+      max-request-size: ${MAX_REQUEST_SIZE:45MB}
+  jackson:
+    default-property-inclusion: non_null
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+designloop:
+  demo-learner-id: ${DEMO_LEARNER_ID:d847c7fe-2d42-49d4-8e4d-dde0acbbfd6a}
+  uploads-dir: ${UPLOADS_DIR:./data/uploads}
+  max-file-size-bytes: ${DESIGNLOOP_MAX_FILE_SIZE_BYTES:20971520}
+  max-attachments-per-attempt: ${MAX_ATTACHMENTS_PER_ATTEMPT:8}
+  max-evaluation-runs: ${MAX_EVALUATION_RUNS:3}
+  max-document-text-chars: ${MAX_DOCUMENT_TEXT_CHARS:40000}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-3.7-flash}
+    base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com}
+    connect-timeout-seconds: ${GEMINI_CONNECT_TIMEOUT_SECONDS:10}
+    read-timeout-seconds: ${GEMINI_READ_TIMEOUT_SECONDS:90}
