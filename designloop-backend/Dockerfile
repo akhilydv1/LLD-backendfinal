@@ -1,6 +1,6 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /build
-COPY pom.xml designloop-backend
+COPY pom.xml designloop-backend/pom.xml
 COPY src designloop-backend/src
 RUN mvn -q -DskipTests package
 
