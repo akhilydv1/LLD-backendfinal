@@ -1,5 +1,4 @@
-```java
-        package com.designloop.config;
+package com.designloop.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
