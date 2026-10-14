@@ -1,4 +1,5 @@
-package com.designloop.config;
+```java
+        package com.designloop.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -7,11 +8,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     private final String[] allowedOrigins;
 
-    public WebConfig(@Value("${designloop.cors.allowed-origins:http://localhost:5173,http://localhost:5174}") String allowedOrigins) {
+    public WebConfig(
+            @Value("${designloop.cors.allowed-origins:http://localhost:5173,http://localhost:5174,https://lld-project-frontend.vercel.app}")
+            String allowedOrigins) {
+
         this.allowedOrigins = allowedOrigins.split(",");
-        for (int i = 0; i < this.allowedOrigins.length; i++) this.allowedOrigins[i] = this.allowedOrigins[i].trim();
+
+        for (int i = 0; i < this.allowedOrigins.length; i++) {
+            this.allowedOrigins[i] = this.allowedOrigins[i].trim();
+        }
     }
 
     @Override
@@ -19,9 +27,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")
                 .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("Content-Type", "X-Learner-Id", "Idempotency-Key", "Accept")
+                .allowedHeaders("*")
                 .exposedHeaders("Location", "X-Request-Id")
                 .allowCredentials(false)
                 .maxAge(3600);
     }
 }
+```
